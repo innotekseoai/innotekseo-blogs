@@ -1,6 +1,9 @@
 # innotekseo-blogs
 
-A modular Node.js library for powering blog architectures with [Astro](https://astro.build). It bridges static generation and dynamic content management through a unified adapter interface for fetching content from local files or headless CMSs (Strapi, Contentful), extends Markdown with interactive UI components (MDX), and includes tooling for migrating legacy HTML sites, generating RSS feeds, and client-side search.
+> Modular Node.js library for powering blog architectures with [Astro](https://astro.build).
+> GitHub: **[innotekseoai/innotekseo-blogs](https://github.com/innotekseoai/innotekseo-blogs)**
+
+Bridges static generation and dynamic content management through a unified adapter interface for fetching content from local files or headless CMSs (Strapi, Contentful), extends Markdown with interactive UI components (MDX), and includes tooling for migrating legacy HTML sites, generating RSS feeds, and client-side search.
 
 ## Table of Contents
 
@@ -23,6 +26,8 @@ A modular Node.js library for powering blog architectures with [Astro](https://a
 - [Key Design Decisions](#key-design-decisions)
 - [Guides](#guides)
 - [Roadmap](#roadmap)
+- [Environment Variables](#environment-variables)
+- [Deployment](#deployment)
 
 ---
 
@@ -68,7 +73,7 @@ innotekseo-blogs/
     components/       @innotekseo-blogs/components — Astro UI components for MDX
     cli/              @innotekseo-blogs/cli        — HTML-to-MDX migration tool
   apps/
-    test-local/       Working Astro demo app with LocalAdapter + components
+    test-innotekseo/  Working Astro demo app with LocalAdapter + components
   docs/
     guide-core-api.md     Core library & API usage guide
     guide-migration.md    Migration CLI guide
@@ -255,7 +260,7 @@ const result = validateMarkdown(markdownString);
 
 ### @innotekseo-blogs/components
 
-Astro UI components designed for use inside MDX blog posts. All components use **scoped CSS** with an `ab-` class prefix — no Tailwind or external CSS framework required.
+Astro UI components designed for use inside MDX blog posts. All components use **scoped CSS** with an `ib-` class prefix — no Tailwind or external CSS framework required.
 
 **Peer dependency:** `astro ^4.0.0 || ^5.0.0`
 
@@ -390,7 +395,7 @@ Individual functions are also exported: `crawlPage`, `crawlSite`, `convertPage`,
 
 ```bash
 # Clone and install
-git clone <repo-url> innotekseo-blogs
+git clone https://github.com/innotekseoai/innotekseo-blogs.git
 cd innotekseo-blogs
 npm install
 
@@ -457,7 +462,7 @@ curl -X POST http://localhost:3001/api/posts \
 
 ## Example App
 
-A working Astro demo app lives at `apps/test-local/`. It demonstrates all core features:
+A working Astro demo app lives at `apps/test-innotekseo/`. It demonstrates all core features:
 
 - **Index page** — Lists posts using `LocalAdapter` + `Grid` + `Card` components
 - **Post pages** — Dynamic `[slug].astro` routes using `PostLayout` with full SEO
@@ -471,8 +476,8 @@ A working Astro demo app lives at `apps/test-local/`. It demonstrates all core f
 
 ```bash
 npm install
-npm run build                          # Build core + cli packages first
-cd apps/test-local && npm run dev      # Start Astro dev server
+npm run build                                # Build core + cli packages first
+cd apps/test-innotekseo && npm run dev       # Start Astro dev server
 ```
 
 Open `http://localhost:4321` to see the demo.
@@ -865,7 +870,7 @@ In-depth walkthroughs with setup instructions, integration examples, and real-wo
 - [x] **Phase 3:** Migration CLI — HTML crawling, markdown conversion, image downloading, SSRF/path traversal protection
 - [x] **Phase 4:** REST API — Full CRUD with pagination, search, filtering, validation, webhooks, API key auth, HTML sanitization
 - [x] **Phase 4.5:** Utilities — ContentfulAdapter, RSS feed generation, client-side search, slug validation module
-- [x] **Phase 5:** Example app — `apps/test-local` with LocalAdapter, components, RSS, search index
+- [x] **Phase 5:** Example app — `apps/test-innotekseo` with LocalAdapter, components, RSS, search index
 
 ### Next (v0.2.0)
 
@@ -887,6 +892,73 @@ In-depth walkthroughs with setup instructions, integration examples, and real-wo
 
 ---
 
+## Environment Variables
+
+No environment variables are required for local development with `LocalAdapter`. Remote adapters and API auth use these:
+
+**Core — REST API server:**
+```
+API_KEY=<your-secret>        # Optional. Protects POST/PUT/DELETE endpoints when set.
+WEBHOOK_URL=<url>            # Optional. Fires on content changes (create/update/delete).
+```
+
+**StrapiAdapter:**
+```
+STRAPI_URL=http://localhost:1337
+STRAPI_TOKEN=<full-access-api-token>
+```
+
+**ContentfulAdapter:**
+```
+CONTENTFUL_SPACE_ID=<space-id>
+CONTENTFUL_ACCESS_TOKEN=<delivery-access-token>
+CONTENTFUL_ENVIRONMENT=master           # default
+CONTENTFUL_CONTENT_TYPE=blogPost        # default
+```
+
+---
+
+## Deployment
+
+### CI (GitHub Actions)
+
+Every push to `main` and every pull request runs the full test suite on Node 20 and 22:
+
+```yaml
+# .github/workflows/ci.yml
+# - npm ci
+# - npm run build
+# - npm test
+# - Verify no uncommitted build artifacts
+```
+
+### Example app — Vercel
+
+```bash
+cd apps/test-innotekseo
+npx vercel --prod
+```
+
+### Example app — Netlify
+
+```bash
+cd apps/test-innotekseo
+npx netlify deploy --build --prod
+```
+
+### Publishing packages to npm
+
+```bash
+npm run build
+cd packages/core && npm publish
+cd packages/components && npm publish
+cd packages/cli && npm publish
+```
+
+All packages are scoped to `@innotekseo-blogs/` with `"publishConfig": { "access": "public" }`.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |
@@ -903,3 +975,9 @@ In-depth walkthroughs with setup instructions, integration examples, and real-wo
 | Monorepo | npm workspaces |
 
 ## License
+
+ISC — see individual `package.json` files for per-package license declarations.
+
+---
+
+→ [Innotek Enterprise](https://innotekseoai.com/pricing) for automated blog infrastructure, content management, and AI-powered SEO tooling.
