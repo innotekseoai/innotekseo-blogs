@@ -1,0 +1,17 @@
+{
+  "name": "@innotekseo-blogs/test-innotekseo",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@innotekseo-blogs/components": "*",
+    "@innotekseo-blogs/core": "*",
+    "@astrojs/mdx": "^4.0.0",
+    "astro": "^5.0.0"
+  }
+}
