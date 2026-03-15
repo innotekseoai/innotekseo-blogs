@@ -10,9 +10,9 @@ Bridges static generation and dynamic content management through a unified adapt
 - [Architecture Overview](#architecture-overview)
 - [Monorepo Structure](#monorepo-structure)
 - [Packages](#packages)
-  - [@innotekseo-blogs/core](#innotekseo-blogscore)
-  - [@innotekseo-blogs/components](#innotekseo-blogscomponents)
-  - [@innotekseo-blogs/cli](#innotekseo-blogscli)
+  - [@innotekseo/blogs-core](#innotekseo-blogscore)
+  - [@innotekseo/blogs-components](#innotekseo-blogscomponents)
+  - [@innotekseo/blogs-migrate](#innotekseo-blogscli)
 - [Getting Started](#getting-started)
 - [Example App](#example-app)
 - [Content Adapter System](#content-adapter-system)
@@ -42,7 +42,7 @@ Bridges static generation and dynamic content management through a unified adapt
                                      getPost / getPosts
                                              |
 +-------------------+           +------------+------------+
-| Migration CLI     |           |    @innotekseo-blogs/core    |
+| Migration CLI     |           |    @innotekseo/blogs-core    |
 | (HTML -> MDX)     |           |                         |
 |                   +---------->+  ContentAdapter (iface) |
 | cheerio + turndown|  writes   |  ContentService         |
@@ -69,9 +69,9 @@ External systems can push content via the REST API (`POST /api/posts`), which va
 ```
 innotekseo-blogs/
   packages/
-    core/             @innotekseo-blogs/core       — Adapters, ContentService, REST API, RSS, Search
-    components/       @innotekseo-blogs/components — Astro UI components for MDX
-    cli/              @innotekseo-blogs/cli        — HTML-to-MDX migration tool
+    core/             @innotekseo/blogs-core       — Adapters, ContentService, REST API, RSS, Search
+    components/       @innotekseo/blogs-components — Astro UI components for MDX
+    cli/              @innotekseo/blogs-migrate        — HTML-to-MDX migration tool
   apps/
     test-innotekseo/  Working Astro demo app with LocalAdapter + components
   docs/
@@ -88,7 +88,7 @@ Managed with **npm workspaces**. All packages use **TypeScript** with ES modules
 
 ## Packages
 
-### @innotekseo-blogs/core
+### @innotekseo/blogs-core
 
 The central library providing content abstraction, data access, REST API server, RSS generation, and search indexing.
 
@@ -97,13 +97,13 @@ The central library providing content abstraction, data access, REST API server,
 **Export paths:**
 
 ```
-@innotekseo-blogs/core                      → ContentService, all adapters, types, slug utils, RSS, search
-@innotekseo-blogs/core/adapters/local       → LocalAdapter
-@innotekseo-blogs/core/adapters/strapi      → StrapiAdapter
-@innotekseo-blogs/core/adapters/contentful  → ContentfulAdapter
-@innotekseo-blogs/core/rss                  → generateRss()
-@innotekseo-blogs/core/search               → buildSearchIndex(), searchIndex()
-@innotekseo-blogs/core/server               → createApi(), startServer(), validateMarkdown()
+@innotekseo/blogs-core                      → ContentService, all adapters, types, slug utils, RSS, search
+@innotekseo/blogs-core/adapters/local       → LocalAdapter
+@innotekseo/blogs-core/adapters/strapi      → StrapiAdapter
+@innotekseo/blogs-core/adapters/contentful  → ContentfulAdapter
+@innotekseo/blogs-core/rss                  → generateRss()
+@innotekseo/blogs-core/search               → buildSearchIndex(), searchIndex()
+@innotekseo/blogs-core/server               → createApi(), startServer(), validateMarkdown()
 ```
 
 #### ContentAdapter Interface
@@ -159,7 +159,7 @@ interface PaginatedResult<T> {
 - **Cache invalidation** on writes (savePost, deletePost)
 
 ```typescript
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const adapter = new LocalAdapter("./src/content");
 const posts = await adapter.getPosts();
@@ -177,7 +177,7 @@ const adapter = new LocalAdapter("./src/content", { cacheTtlMs: 10000 });
 - Injectable `fetchFn` for testability
 
 ```typescript
-import { StrapiAdapter } from "@innotekseo-blogs/core/adapters/strapi";
+import { StrapiAdapter } from "@innotekseo/blogs-core/adapters/strapi";
 
 const adapter = new StrapiAdapter({
   url: "https://strapi.example.com",
@@ -191,7 +191,7 @@ const adapter = new StrapiAdapter({
 - Injectable `fetchFn` for testability
 
 ```typescript
-import { ContentfulAdapter } from "@innotekseo-blogs/core/adapters/contentful";
+import { ContentfulAdapter } from "@innotekseo/blogs-core/adapters/contentful";
 
 const adapter = new ContentfulAdapter({
   spaceId: process.env.CONTENTFUL_SPACE_ID,
@@ -206,7 +206,7 @@ const adapter = new ContentfulAdapter({
 A thin wrapper that holds the active adapter and allows runtime swapping:
 
 ```typescript
-import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo-blogs/core";
+import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo/blogs-core";
 
 const service = new ContentService(new LocalAdapter("./content"));
 
@@ -219,8 +219,8 @@ service.setAdapter(new StrapiAdapter({ url: "...", token: "..." }));
 Built with [Hono](https://hono.dev) and served via `@hono/node-server`.
 
 ```typescript
-import { startServer } from "@innotekseo-blogs/core/server";
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { startServer } from "@innotekseo/blogs-core/server";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 startServer({
   adapter: new LocalAdapter("./content"),
@@ -234,7 +234,7 @@ startServer({
 For programmatic use (e.g., in tests or Astro API routes), use `createApi()` directly:
 
 ```typescript
-import { createApi } from "@innotekseo-blogs/core/server";
+import { createApi } from "@innotekseo/blogs-core/server";
 
 const app = createApi({ adapter });
 const response = await app.fetch(new Request("http://localhost/api/posts"));
@@ -250,7 +250,7 @@ All write operations validate markdown content before saving:
 - **Size limit:** 10MB maximum markdown content size
 
 ```typescript
-import { validateMarkdown } from "@innotekseo-blogs/core/server";
+import { validateMarkdown } from "@innotekseo/blogs-core/server";
 
 const result = validateMarkdown(markdownString);
 // { valid: boolean, errors: string[], data?: Record, content?: string }
@@ -258,7 +258,7 @@ const result = validateMarkdown(markdownString);
 
 ---
 
-### @innotekseo-blogs/components
+### @innotekseo/blogs-components
 
 Astro UI components designed for use inside MDX blog posts. All components use **scoped CSS** with an `ib-` class prefix — no Tailwind or external CSS framework required.
 
@@ -293,13 +293,13 @@ interface Props {
 
 ```mdx
 ---
-layout: '@innotekseo-blogs/components/PostLayout.astro'
+layout: '@innotekseo/blogs-components/PostLayout.astro'
 title: "My Post"
 date: "2024-01-15"
 tags: ["astro", "tutorial"]
 ---
-import Card from '@innotekseo-blogs/components/Card.astro';
-import Grid from '@innotekseo-blogs/components/Grid.astro';
+import Card from '@innotekseo/blogs-components/Card.astro';
+import Grid from '@innotekseo/blogs-components/Grid.astro';
 
 <Grid columns={3}>
   <Card title="Fast" image="/img/fast.png">Built on Astro SSG</Card>
@@ -311,12 +311,12 @@ import Grid from '@innotekseo-blogs/components/Grid.astro';
 **Barrel import (for layout pass-through):**
 
 ```typescript
-import { Card, Grid, Tabs, Button } from '@innotekseo-blogs/components/mdx';
+import { Card, Grid, Tabs, Button } from '@innotekseo/blogs-components/mdx';
 ```
 
 ---
 
-### @innotekseo-blogs/cli
+### @innotekseo/blogs-migrate
 
 Command-line tool for migrating legacy HTML websites to MDX content files.
 
@@ -337,7 +337,7 @@ Command-line tool for migrating legacy HTML websites to MDX content files.
 #### CLI Usage
 
 ```bash
-npx innotekseo-blogs-migrate --url <start-url> [options]
+npx innotekseo-migrate --url <start-url> [options]
 
 Options:
   --url <url>        Start URL to crawl (required)
@@ -349,7 +349,7 @@ Options:
 **Example:**
 
 ```bash
-npx innotekseo-blogs-migrate \
+npx innotekseo-migrate \
   --url https://old-blog.example.com/posts \
   --output ./src/content \
   --depth 3 \
@@ -373,7 +373,7 @@ Converted markdown content...
 #### Programmatic Usage
 
 ```typescript
-import { migrate } from "@innotekseo-blogs/cli";
+import { migrate } from "@innotekseo/blogs-migrate";
 
 const files = await migrate({
   url: "https://old-blog.example.com",
@@ -417,8 +417,8 @@ cd packages/cli && npm run build
 
 ```bash
 node -e "
-  import { startServer } from '@innotekseo-blogs/core/server';
-  import { LocalAdapter } from '@innotekseo-blogs/core/adapters/local';
+  import { startServer } from '@innotekseo/blogs-core/server';
+  import { LocalAdapter } from '@innotekseo/blogs-core/adapters/local';
   startServer({ adapter: new LocalAdapter('./content'), port: 3001 });
 "
 ```
@@ -427,8 +427,8 @@ node -e "
 
 ```bash
 node -e "
-  import { startServer } from '@innotekseo-blogs/core/server';
-  import { LocalAdapter } from '@innotekseo-blogs/core/adapters/local';
+  import { startServer } from '@innotekseo/blogs-core/server';
+  import { LocalAdapter } from '@innotekseo/blogs-core/adapters/local';
   startServer({
     adapter: new LocalAdapter('./content'),
     port: 3001,
@@ -489,7 +489,7 @@ Open `http://localhost:4321` to see the demo.
 The adapter pattern decouples content storage from the rest of the system. To add a new CMS backend, implement the `ContentAdapter` interface:
 
 ```typescript
-import type { ContentAdapter, Post, PostMeta, SaveResult, DeleteResult } from "@innotekseo-blogs/core";
+import type { ContentAdapter, Post, PostMeta, SaveResult, DeleteResult } from "@innotekseo/blogs-core";
 
 export class MyAdapter implements ContentAdapter {
   async getPosts(): Promise<PostMeta[]> { /* ... */ }
@@ -642,7 +642,7 @@ Webhook failures are logged but do not affect the API response. Requests have a 
 Generate valid RSS 2.0 feeds with Atom self-link from any content adapter:
 
 ```typescript
-import { LocalAdapter, generateRss } from "@innotekseo-blogs/core";
+import { LocalAdapter, generateRss } from "@innotekseo/blogs-core";
 
 const adapter = new LocalAdapter("./content");
 const rss = await generateRss(adapter, {
@@ -659,7 +659,7 @@ const rss = await generateRss(adapter, {
 
 ```typescript
 // src/pages/rss.xml.ts
-import { LocalAdapter, generateRss } from "@innotekseo-blogs/core";
+import { LocalAdapter, generateRss } from "@innotekseo/blogs-core";
 
 export async function GET() {
   const adapter = new LocalAdapter("./src/content/posts");
@@ -691,7 +691,7 @@ Build a search index at build time and query it client-side with zero external d
 ### Build the index
 
 ```typescript
-import { LocalAdapter, buildSearchIndex } from "@innotekseo-blogs/core";
+import { LocalAdapter, buildSearchIndex } from "@innotekseo/blogs-core";
 
 const adapter = new LocalAdapter("./content");
 const index = await buildSearchIndex(adapter);
@@ -702,7 +702,7 @@ const index = await buildSearchIndex(adapter);
 
 ```typescript
 // src/pages/search.json.ts
-import { LocalAdapter, buildSearchIndex } from "@innotekseo-blogs/core";
+import { LocalAdapter, buildSearchIndex } from "@innotekseo/blogs-core";
 
 export async function GET() {
   const adapter = new LocalAdapter("./src/content/posts");
@@ -716,7 +716,7 @@ export async function GET() {
 ### Client-side search
 
 ```typescript
-import { searchIndex } from "@innotekseo-blogs/core/search";
+import { searchIndex } from "@innotekseo/blogs-core/search";
 
 // Fetch the pre-built index
 const res = await fetch("/search.json");
@@ -742,7 +742,7 @@ Results are sorted by score descending. Multiple search terms combine additively
 
 ## MDX Components
 
-See [@innotekseo-blogs/components](#innotekseo-blogscomponents) for the full component list. Key features:
+See [@innotekseo/blogs-components](#innotekseo-blogscomponents) for the full component list. Key features:
 
 - **Zero dependencies** — vanilla JS, scoped CSS, no framework runtime
 - **Accessible** — Tabs have full ARIA support with keyboard navigation (Arrow keys, Home/End)
@@ -874,7 +874,7 @@ In-depth walkthroughs with setup instructions, integration examples, and real-wo
 
 ### Next (v0.2.0)
 
-- [ ] Publish to npm as beta (`@innotekseo-blogs/core`, `@innotekseo-blogs/components`, `@innotekseo-blogs/cli`)
+- [ ] Publish to npm as beta (`@innotekseo/blogs-core`, `@innotekseo/blogs-components`, `@innotekseo/blogs-migrate`)
 - [ ] Deploy example app (Vercel/Netlify)
 - [x] CLI integration test coverage (migrate.ts, images.ts, bin.ts)
 - [x] GitHub Actions CI pipeline
@@ -955,7 +955,7 @@ cd packages/components && npm publish
 cd packages/cli && npm publish
 ```
 
-All packages are scoped to `@innotekseo-blogs/` with `"publishConfig": { "access": "public" }`.
+All packages are scoped to `@innotekseo/` with `"publishConfig": { "access": "public" }`.
 
 ---
 

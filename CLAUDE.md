@@ -34,7 +34,7 @@ cd packages/cli && npx vitest run
 cd packages/components && npx vitest run
 
 # Migration CLI (after build)
-npx innotekseo-blogs-migrate --url <url> --output ./content --depth 2 --delay 500
+npx innotekseo-migrate --url <url> --output ./content --depth 2 --delay 500
 
 # Run demo app (build packages first)
 npm run build && cd apps/test-innotekseo && npm run dev
@@ -47,7 +47,7 @@ npm run build && cd apps/test-innotekseo && npm run dev
 ```
 innotekseo-blogs/
 ├── packages/
-│   ├── core/                          @innotekseo-blogs/core
+│   ├── core/                          @innotekseo/blogs-core
 │   │   ├── src/
 │   │   │   ├── adapters/
 │   │   │   │   ├── local.adapter.ts   LocalAdapter — filesystem r/w, TTL cache
@@ -77,7 +77,7 @@ innotekseo-blogs/
 │   │   ├── package.json
 │   │   ├── tsconfig.json
 │   │   └── vitest.config.ts           Excludes dist/**
-│   ├── components/                    @innotekseo-blogs/components
+│   ├── components/                    @innotekseo/blogs-components
 │   │   ├── src/
 │   │   │   ├── Card.astro             ib-card, ib-card-body, ib-card-title, ib-card-image
 │   │   │   ├── Grid.astro             ib-grid, ib-grid--2/3/4
@@ -89,7 +89,7 @@ innotekseo-blogs/
 │   │   │       └── components.test.ts  34 tests — static source analysis
 │   │   ├── package.json               Ships as source .astro (no build step)
 │   │   └── vitest.config.ts
-│   └── cli/                           @innotekseo-blogs/cli
+│   └── cli/                           @innotekseo/blogs-migrate
 │       ├── src/
 │       │   ├── bin.ts                 CLI entrypoint, parseArgs(), validateOutputPath()
 │       │   ├── crawler.ts             crawlPage(), content extraction
@@ -104,7 +104,7 @@ innotekseo-blogs/
 │       │       ├── migrate.test.ts    6 tests
 │       │       ├── images.test.ts     10 tests
 │       │       └── converter.test.ts  13 tests
-│       ├── package.json               bin: innotekseo-blogs-migrate
+│       ├── package.json               bin: innotekseo-migrate
 │       └── tsconfig.json
 ├── apps/
 │   └── test-innotekseo/               Demo Astro app → blogs.innotekseoai.com
@@ -213,13 +213,13 @@ service.setAdapter(new StrapiAdapter({ url: "...", token: "..." }));
 ## Export Paths (core)
 
 ```
-@innotekseo-blogs/core                      → ContentService, all adapters, types, slug utils
-@innotekseo-blogs/core/adapters/local       → LocalAdapter
-@innotekseo-blogs/core/adapters/strapi      → StrapiAdapter
-@innotekseo-blogs/core/adapters/contentful  → ContentfulAdapter
-@innotekseo-blogs/core/rss                  → generateRss()
-@innotekseo-blogs/core/search               → buildSearchIndex(), searchIndex()
-@innotekseo-blogs/core/server               → createApi(), startServer(), validateMarkdown()
+@innotekseo/blogs-core                      → ContentService, all adapters, types, slug utils
+@innotekseo/blogs-core/adapters/local       → LocalAdapter
+@innotekseo/blogs-core/adapters/strapi      → StrapiAdapter
+@innotekseo/blogs-core/adapters/contentful  → ContentfulAdapter
+@innotekseo/blogs-core/rss                  → generateRss()
+@innotekseo/blogs-core/search               → buildSearchIndex(), searchIndex()
+@innotekseo/blogs-core/server               → createApi(), startServer(), validateMarkdown()
 ```
 
 ---
@@ -582,8 +582,8 @@ All packages: `"type": "module"`, `"engines": { "node": ">=20.0.0" }`, Vitest v4
 ## Rebrand Notes (astro-blogs → innotekseo-blogs)
 
 This repo was cloned and rebranded from `D:/repos/astro-blogs`. Changes applied:
-- `@astro-blogs/` → `@innotekseo-blogs/` (all package scopes)
-- `astro-blogs-migrate` → `innotekseo-blogs-migrate` (CLI binary)
+- `@astro-blogs/` → `@innotekseo-blogs/` → `@innotekseo/blogs-*` (all package scopes)
+- `astro-blogs-migrate` → `innotekseo-migrate` (CLI binary)
 - `ab-` → `ib-` (CSS class prefix in all `.astro` files and test assertions)
 - `apps/test-local/` → `apps/test-innotekseo/`
 

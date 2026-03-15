@@ -3,7 +3,7 @@
  *
  * Usage in astro.config.mjs:
  *
- *   import { mdxComponents } from '@innotekseo-blogs/components/mdx';
+ *   import { mdxComponents } from '@innotekseo/blogs-components/mdx';
  *
  * Then in your .mdx files you can use <Card>, <Grid>, <Tabs>, <Button>
  * without explicit imports when configured via the customComponents option
@@ -11,7 +11,7 @@
  *
  * Alternatively, import directly in MDX:
  *
- *   import Card from '@innotekseo-blogs/components/Card.astro';
+ *   import Card from '@innotekseo/blogs-components/Card.astro';
  */
 
 export { default as Card } from "./Card.astro";

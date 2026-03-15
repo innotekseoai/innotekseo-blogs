@@ -116,13 +116,13 @@ innotekseo-blogs is a modular monorepo providing content adapters, UI components
 ### Export paths (core)
 
 ```
-@innotekseo-blogs/core                      → ContentService, adapters, types, slug utils
-@innotekseo-blogs/core/adapters/local       → LocalAdapter
-@innotekseo-blogs/core/adapters/strapi      → StrapiAdapter
-@innotekseo-blogs/core/adapters/contentful  → ContentfulAdapter
-@innotekseo-blogs/core/rss                  → generateRss()
-@innotekseo-blogs/core/search               → buildSearchIndex(), searchIndex()
-@innotekseo-blogs/core/server               → createApi(), startServer()
+@innotekseo/blogs-core                      → ContentService, adapters, types, slug utils
+@innotekseo/blogs-core/adapters/local       → LocalAdapter
+@innotekseo/blogs-core/adapters/strapi      → StrapiAdapter
+@innotekseo/blogs-core/adapters/contentful  → ContentfulAdapter
+@innotekseo/blogs-core/rss                  → generateRss()
+@innotekseo/blogs-core/search               → buildSearchIndex(), searchIndex()
+@innotekseo/blogs-core/server               → createApi(), startServer()
 ```
 
 ---

@@ -1,12 +1,33 @@
 {
-  "name": "@innotekseo-blogs/cli",
-  "version": "0.1.0",
+  "name": "@innotekseo/blogs-migrate",
+  "version": "0.1.2",
   "type": "module",
-  "description": "HTML-to-MDX migration CLI for innotekseo-blogs",
+  "description": "HTML-to-MDX migration CLI — crawl legacy HTML sites and convert to MDX content files",
+  "keywords": [
+    "html-to-mdx",
+    "migration",
+    "crawler",
+    "blog",
+    "mdx",
+    "markdown",
+    "cheerio",
+    "turndown",
+    "innotek"
+  ],
+  "author": "Innotek Solutions Ltd",
   "license": "ISC",
-  "files": ["dist", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/innotekseoai/innotekseo-blogs.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://innotekseoai.com/platform-toolkits",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "bin": {
-    "innotekseo-blogs-migrate": "./dist/bin.js"
+    "innotekseo-migrate": "dist/bin.js"
   },
   "exports": {
     ".": "./dist/index.js"

@@ -14,7 +14,7 @@ export async function crawlPage(
   fetchFn: typeof fetch = fetch,
 ): Promise<CrawledPage> {
   const response = await fetchFn(url, {
-    headers: { "User-Agent": "innotekseo-blogs-migrate/0.1" },
+    headers: { "User-Agent": "innotekseo-migrate/0.1" },
     signal: AbortSignal.timeout(15000),
   });
 

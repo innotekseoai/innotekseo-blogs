@@ -1,6 +1,6 @@
 # Guide: Migrating Legacy Sites to innotekseo-blogs
 
-This guide covers using `@innotekseo-blogs/cli` to crawl legacy HTML websites and convert them into MDX content files ready for innotekseo-blogs.
+This guide covers using `@innotekseo/blogs-migrate` to crawl legacy HTML websites and convert them into MDX content files ready for innotekseo-blogs.
 
 ## Table of Contents
 
@@ -29,7 +29,7 @@ The migration tool:
 5. **Downloads images** to a local `images/` directory and rewrites paths in the markdown
 6. **Generates `.mdx` files** with frontmatter (title, date, source URL)
 
-The result is a directory of `.mdx` files that work directly with `@innotekseo-blogs/core`'s `LocalAdapter`.
+The result is a directory of `.mdx` files that work directly with `@innotekseo/blogs-core`'s `LocalAdapter`.
 
 ---
 
@@ -45,13 +45,13 @@ npm run build
 For standalone use (once published):
 
 ```bash
-npm install -g @innotekseo-blogs/cli
+npm install -g @innotekseo/blogs-migrate
 ```
 
 Or run directly with npx:
 
 ```bash
-npx innotekseo-blogs-migrate --url https://example.com --output ./content
+npx innotekseo-migrate --url https://example.com --output ./content
 ```
 
 ---
@@ -64,13 +64,13 @@ Find the starting URL of your legacy blog. This is usually the blog index page o
 
 ```bash
 # Migrate a WordPress blog
-npx innotekseo-blogs-migrate --url https://old-blog.example.com/blog --output ./content
+npx innotekseo-migrate --url https://old-blog.example.com/blog --output ./content
 
 # Migrate a single-page documentation site
-npx innotekseo-blogs-migrate --url https://docs.example.com --output ./content --depth 3
+npx innotekseo-migrate --url https://docs.example.com --output ./content --depth 3
 
 # Migrate a Jekyll/Hugo blog
-npx innotekseo-blogs-migrate --url https://mysite.github.io/posts --output ./content --depth 2
+npx innotekseo-migrate --url https://mysite.github.io/posts --output ./content --depth 2
 ```
 
 ### Step 2: Review the output
@@ -113,7 +113,7 @@ mv content/* src/content/blog/
 ## CLI Options
 
 ```
-Usage: innotekseo-blogs-migrate --url <start-url> [options]
+Usage: innotekseo-migrate --url <start-url> [options]
 
 Options:
   --url <url>        Start URL to crawl (required)
@@ -196,7 +196,7 @@ Where to write the `.mdx` files and `images/` directory.
 
 ### Crawl Phase
 
-1. Fetches the start URL with a `innotekseo-blogs-migrate/0.1` User-Agent
+1. Fetches the start URL with a `innotekseo-migrate/0.1` User-Agent
 2. Parses HTML with **cheerio**
 3. Removes noise elements (`<script>`, `<style>`, `<nav>`, `<footer>`, `<header>`, `<aside>`, `<iframe>`)
 4. Extracts the page title from `<h1>`, falling back to `<title>`
@@ -278,7 +278,7 @@ For custom migration workflows, import the individual functions:
 ### Full migration
 
 ```typescript
-import { migrate } from "@innotekseo-blogs/cli";
+import { migrate } from "@innotekseo/blogs-migrate";
 
 const createdFiles = await migrate({
   url: "https://old-blog.example.com",
@@ -297,7 +297,7 @@ for (const file of createdFiles) {
 ### Crawl a single page
 
 ```typescript
-import { crawlPage } from "@innotekseo-blogs/cli";
+import { crawlPage } from "@innotekseo/blogs-migrate";
 
 const page = await crawlPage("https://example.com/blog/my-post");
 console.log(page.title);        // "My Post"
@@ -309,7 +309,7 @@ console.log(page.imageUrls);    // image URLs found in body
 ### Convert HTML to markdown
 
 ```typescript
-import { convertPage, toMdxString } from "@innotekseo-blogs/cli";
+import { convertPage, toMdxString } from "@innotekseo/blogs-migrate";
 
 const page = {
   url: "https://example.com/my-post",
@@ -339,7 +339,7 @@ const mdxContent = toMdxString(post);
 ### Custom slug generation
 
 ```typescript
-import { slugify } from "@innotekseo-blogs/cli";
+import { slugify } from "@innotekseo/blogs-migrate";
 
 slugify("https://example.com/blog/my-post");       // "my-post"
 slugify("https://example.com/about.html");          // "about"
@@ -350,7 +350,7 @@ slugify("https://example.com/2024/01/title");       // "title"
 ### Download images separately
 
 ```typescript
-import { downloadImages } from "@innotekseo-blogs/cli";
+import { downloadImages } from "@innotekseo/blogs-migrate";
 
 const imageMap = await downloadImages(
   ["https://example.com/photo.jpg", "/img/banner.png"],
@@ -366,7 +366,7 @@ const imageMap = await downloadImages(
 ### Custom crawl with callback
 
 ```typescript
-import { crawlSite } from "@innotekseo-blogs/cli";
+import { crawlSite } from "@innotekseo/blogs-migrate";
 
 await crawlSite(
   {
@@ -452,8 +452,8 @@ Now that content is in `.mdx` format, you can enhance it with innotekseo-blogs c
 title: "Migrated Post"
 date: "2022-03-15"
 ---
-import Card from '@innotekseo-blogs/components/Card.astro';
-import Grid from '@innotekseo-blogs/components/Grid.astro';
+import Card from '@innotekseo/blogs-components/Card.astro';
+import Grid from '@innotekseo/blogs-components/Grid.astro';
 
 # Original Content
 
@@ -474,7 +474,7 @@ The migrated markdown content stays as-is...
 Start the content API and verify all posts load:
 
 ```typescript
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const adapter = new LocalAdapter("./content");
 const posts = await adapter.getPosts();
@@ -499,7 +499,7 @@ console.log(`\n${posts.length} posts validated`);
 
 ```bash
 # Migrate
-npx innotekseo-blogs-migrate --url https://old-blog.example.com --output ./migrated
+npx innotekseo-migrate --url https://old-blog.example.com --output ./migrated
 
 # Move into project
 mv migrated/*.mdx src/content/blog/
@@ -515,15 +515,15 @@ sed -i 's|./images/|/images/blog/|g' src/content/blog/*.mdx
 ```bash
 mkdir my-new-blog && cd my-new-blog
 npm init -y
-npm install @innotekseo-blogs/core
+npm install @innotekseo/blogs-core
 
 # Migrate directly into content dir
-npx innotekseo-blogs-migrate --url https://old-blog.example.com --output ./content --depth 3
+npx innotekseo-migrate --url https://old-blog.example.com --output ./content --depth 3
 
 # Start the API to verify
 node -e "
-  import { startServer } from '@innotekseo-blogs/core/server';
-  import { LocalAdapter } from '@innotekseo-blogs/core/adapters/local';
+  import { startServer } from '@innotekseo/blogs-core/server';
+  import { LocalAdapter } from '@innotekseo/blogs-core/adapters/local';
   startServer({ adapter: new LocalAdapter('./content'), port: 3001 });
 "
 
@@ -537,14 +537,14 @@ If your target is a Strapi CMS setup, use the migration tool as an intermediate 
 
 ```bash
 # Step 1: Migrate to local files
-npx innotekseo-blogs-migrate --url https://old-site.com --output ./migrated --depth 3
+npx innotekseo-migrate --url https://old-site.com --output ./migrated --depth 3
 
 # Step 2: Push to Strapi using a script
 ```
 
 ```typescript
 // push-to-strapi.ts
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const local = new LocalAdapter("./migrated");
 const posts = await local.getPosts();
@@ -581,7 +581,7 @@ for (const meta of posts) {
 WordPress typically uses `.../yyyy/mm/slug` URL patterns:
 
 ```bash
-npx innotekseo-blogs-migrate \
+npx innotekseo-migrate \
   --url https://myblog.wordpress.com \
   --output ./content \
   --depth 2 \
@@ -595,7 +595,7 @@ WordPress content is usually inside `<article>` or `.entry-content`, which the t
 Documentation sites often have deep link structures:
 
 ```bash
-npx innotekseo-blogs-migrate \
+npx innotekseo-migrate \
   --url https://docs.example.com/getting-started \
   --output ./content/docs \
   --depth 5 \
@@ -607,7 +607,7 @@ npx innotekseo-blogs-migrate \
 To convert just one page (e.g., an "about" page):
 
 ```bash
-npx innotekseo-blogs-migrate \
+npx innotekseo-migrate \
   --url https://example.com/about \
   --output ./content \
   --depth 0
@@ -618,7 +618,7 @@ npx innotekseo-blogs-migrate \
 Use the programmatic API to preview without writing files:
 
 ```typescript
-import { crawlSite } from "@innotekseo-blogs/cli";
+import { crawlSite } from "@innotekseo/blogs-migrate";
 
 await crawlSite(
   { url: "https://example.com/blog", output: ".", depth: 2, delay: 500, concurrency: 1 },
@@ -657,7 +657,7 @@ If the tool extracts too little (or too much) content, the source page may not u
 2. Use the programmatic API with cheerio to write a custom extractor:
 
 ```typescript
-import { crawlPage, convertPage, toMdxString } from "@innotekseo-blogs/cli";
+import { crawlPage, convertPage, toMdxString } from "@innotekseo/blogs-migrate";
 import * as cheerio from "cheerio";
 
 const page = await crawlPage("https://oddly-structured-site.com/page");

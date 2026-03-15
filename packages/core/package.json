@@ -1,10 +1,32 @@
 {
-  "name": "@innotekseo-blogs/core",
-  "version": "0.1.0",
+  "name": "@innotekseo/blogs-core",
+  "version": "0.1.1",
   "type": "module",
   "description": "Content adapter library and REST API for Astro blog systems",
+  "keywords": [
+    "astro",
+    "blog",
+    "cms",
+    "strapi",
+    "contentful",
+    "content-adapter",
+    "rss",
+    "search",
+    "hono",
+    "innotek"
+  ],
+  "author": "Innotek Solutions Ltd",
   "license": "ISC",
-  "files": ["dist", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/innotekseoai/innotekseo-blogs.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://innotekseoai.com/platform-toolkits",
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./adapters/local": "./dist/adapters/local.adapter.js",

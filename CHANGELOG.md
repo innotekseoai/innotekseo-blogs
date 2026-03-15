@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Core library** (`@innotekseo-blogs/core`)
+- **Core library** (`@innotekseo/blogs-core`)
   - `ContentAdapter` interface with 7 methods
   - `LocalAdapter` — filesystem-based adapter with TTL cache and slug validation
   - `StrapiAdapter` — read-only adapter for Strapi CMS with auth error handling
@@ -22,14 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - RSS 2.0 feed generation with Atom self-link
   - Client-side search with weighted scoring
 
-- **UI Components** (`@innotekseo-blogs/components`)
+- **UI Components** (`@innotekseo/blogs-components`)
   - `Card` — content card with optional image and link
   - `Grid` — responsive grid layout (2/3/4 columns)
   - `Tabs` — interactive tabs with full ARIA and keyboard navigation
   - `Button` — link/button with variant and size support
   - `PostLayout` — blog post layout with OG, Twitter Card, JSON-LD SEO
 
-- **Migration CLI** (`@innotekseo-blogs/cli`)
+- **Migration CLI** (`@innotekseo/blogs-migrate`)
   - BFS web crawler with configurable depth and rate limiting
   - HTML-to-MDX conversion via cheerio + turndown
   - Image downloading with extension allowlist and 50MB size limit

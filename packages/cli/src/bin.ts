@@ -6,7 +6,7 @@ import type { MigrateOptions } from "./types.js";
 
 function printUsage(): void {
   console.log(`
-Usage: innotekseo-blogs-migrate --url <start-url> [options]
+Usage: innotekseo-migrate --url <start-url> [options]
 
 Options:
   --url <url>        Start URL to crawl (required)

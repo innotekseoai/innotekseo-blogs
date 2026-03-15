@@ -1,10 +1,31 @@
 {
-  "name": "@innotekseo-blogs/components",
+  "name": "@innotekseo/blogs-components",
   "version": "0.1.0",
   "type": "module",
-  "description": "UI components for innotekseo-blogs MDX content",
+  "description": "Astro UI components for MDX blog content — Card, Grid, Tabs, Button, PostLayout with SEO",
+  "keywords": [
+    "astro",
+    "mdx",
+    "components",
+    "blog",
+    "ui",
+    "seo",
+    "open-graph",
+    "json-ld",
+    "innotek"
+  ],
+  "author": "Innotek Solutions Ltd",
   "license": "ISC",
-  "files": ["src", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/innotekseoai/innotekseo-blogs.git",
+    "directory": "packages/components"
+  },
+  "homepage": "https://innotekseoai.com/platform-toolkits",
+  "files": [
+    "src",
+    "README.md"
+  ],
   "exports": {
     "./Card.astro": "./src/Card.astro",
     "./Grid.astro": "./src/Grid.astro",

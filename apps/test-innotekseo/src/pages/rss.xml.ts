@@ -1,4 +1,4 @@
-import { LocalAdapter, generateRss } from "@innotekseo-blogs/core";
+import { LocalAdapter, generateRss } from "@innotekseo/blogs-core";
 
 export async function GET() {
   const adapter = new LocalAdapter("./src/content/posts");

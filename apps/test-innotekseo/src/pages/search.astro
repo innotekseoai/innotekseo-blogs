@@ -1,7 +1,7 @@
 ---
-import { LocalAdapter, buildSearchIndex } from "@innotekseo-blogs/core";
-import Card from "@innotekseo-blogs/components/Card.astro";
-import Grid from "@innotekseo-blogs/components/Grid.astro";
+import { LocalAdapter, buildSearchIndex } from "@innotekseo/blogs-core";
+import Card from "@innotekseo/blogs-components/Card.astro";
+import Grid from "@innotekseo/blogs-components/Grid.astro";
 
 const adapter = new LocalAdapter("./src/content/posts");
 const index = await buildSearchIndex(adapter);

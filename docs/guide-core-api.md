@@ -1,6 +1,6 @@
 # Guide: Core Library & Content API
 
-This guide covers setting up `@innotekseo-blogs/core` from scratch — local content management, the REST API, CMS integration, and scaling from a personal blog to an enterprise setup.
+This guide covers setting up `@innotekseo/blogs-core` from scratch — local content management, the REST API, CMS integration, and scaling from a personal blog to an enterprise setup.
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ This guide covers setting up `@innotekseo-blogs/core` from scratch — local con
 ```bash
 mkdir my-blog && cd my-blog
 npm init -y
-npm install @innotekseo-blogs/core
+npm install @innotekseo/blogs-core
 ```
 
 Create a content directory and your first post:
@@ -53,7 +53,7 @@ Read it programmatically:
 
 ```typescript
 // index.ts
-import { LocalAdapter, ContentService } from "@innotekseo-blogs/core";
+import { LocalAdapter, ContentService } from "@innotekseo/blogs-core";
 
 const service = new ContentService(new LocalAdapter("./content"));
 
@@ -119,7 +119,7 @@ You can add any extra fields — they're passed through as-is in the `PostMeta` 
 **Direct adapter** — use when you know which backend you're targeting:
 
 ```typescript
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const adapter = new LocalAdapter("./content");
 const posts = await adapter.getPosts();
@@ -128,7 +128,7 @@ const posts = await adapter.getPosts();
 **ContentService** — use when you need to swap backends at runtime:
 
 ```typescript
-import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo-blogs/core";
+import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo/blogs-core";
 
 const service = new ContentService(new LocalAdapter("./content"));
 
@@ -186,8 +186,8 @@ await adapter.deletePost("old-post");
 
 ```typescript
 // server.ts
-import { startServer } from "@innotekseo-blogs/core/server";
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { startServer } from "@innotekseo/blogs-core/server";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const adapter = new LocalAdapter("./content");
 
@@ -338,8 +338,8 @@ curl -X POST "http://localhost:3001/api/posts" \
 For embedding in Astro API routes or testing:
 
 ```typescript
-import { createApi } from "@innotekseo-blogs/core/server";
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { createApi } from "@innotekseo/blogs-core/server";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const app = createApi({ adapter: new LocalAdapter("./content") });
 
@@ -358,14 +358,14 @@ const data = await response.json();
 
 ```bash
 cd your-astro-project
-npm install @innotekseo-blogs/core @innotekseo-blogs/components
+npm install @innotekseo/blogs-core @innotekseo/blogs-components
 ```
 
 ### Step 2: Create a content helper
 
 **src/lib/content.ts**
 ```typescript
-import { ContentService, LocalAdapter } from "@innotekseo-blogs/core";
+import { ContentService, LocalAdapter } from "@innotekseo/blogs-core";
 
 export const content = new ContentService(
   new LocalAdapter("./src/content/blog")
@@ -378,8 +378,8 @@ export const content = new ContentService(
 ```astro
 ---
 import { content } from "../../lib/content";
-import Card from "@innotekseo-blogs/components/Card.astro";
-import Grid from "@innotekseo-blogs/components/Grid.astro";
+import Card from "@innotekseo/blogs-components/Card.astro";
+import Grid from "@innotekseo/blogs-components/Grid.astro";
 
 const posts = await content.getPosts();
 ---
@@ -403,7 +403,7 @@ const posts = await content.getPosts();
 ```astro
 ---
 import { content } from "../../lib/content";
-import PostLayout from "@innotekseo-blogs/components/PostLayout.astro";
+import PostLayout from "@innotekseo/blogs-components/PostLayout.astro";
 
 const { slug } = Astro.params;
 const post = await content.getPost(slug!);
@@ -428,8 +428,8 @@ If your Astro project uses `output: "server"`, you can expose the content API di
 **src/pages/api/[...path].ts**
 ```typescript
 import type { APIRoute } from "astro";
-import { createApi } from "@innotekseo-blogs/core/server";
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { createApi } from "@innotekseo/blogs-core/server";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const app = createApi({ adapter: new LocalAdapter("./src/content/blog") });
 
@@ -492,7 +492,7 @@ You can use the adapter programmatically in build scripts:
 
 ```typescript
 // scripts/new-post.ts
-import { LocalAdapter } from "@innotekseo-blogs/core/adapters/local";
+import { LocalAdapter } from "@innotekseo/blogs-core/adapters/local";
 
 const adapter = new LocalAdapter("./src/content/blog");
 const slug = process.argv[2];
@@ -558,7 +558,7 @@ Create an API token at Settings > API Tokens with read access to Posts and Tags.
 
 **src/lib/content.ts**
 ```typescript
-import { ContentService, StrapiAdapter } from "@innotekseo-blogs/core";
+import { ContentService, StrapiAdapter } from "@innotekseo/blogs-core";
 
 export const content = new ContentService(
   new StrapiAdapter({
@@ -596,7 +596,7 @@ Configure a Strapi webhook to trigger rebuilds when content changes:
 Use both adapters — Strapi for published content, local files for drafts:
 
 ```typescript
-import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo-blogs/core";
+import { ContentService, LocalAdapter, StrapiAdapter } from "@innotekseo/blogs-core";
 
 const strapi = new StrapiAdapter({
   url: process.env.STRAPI_URL!,
@@ -636,7 +636,7 @@ import type {
   PostMeta,
   SaveResult,
   DeleteResult,
-} from "@innotekseo-blogs/core";
+} from "@innotekseo/blogs-core";
 
 export class NotionAdapter implements ContentAdapter {
   constructor(private apiKey: string, private databaseId: string) {}

@@ -27,7 +27,7 @@ const mockedDownloadImages = vi.mocked(downloadImages);
 let tmpDir: string;
 
 beforeEach(async () => {
-  tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "innotekseo-blogs-migrate-"));
+  tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "innotekseo-migrate-"));
   vi.clearAllMocks();
 });
 
